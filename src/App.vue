@@ -1,26 +1,16 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <LiveSearch />
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import LiveSearch from "./components/LiveSearch.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    LiveSearch,
   },
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
