@@ -1,97 +1,118 @@
 <template>
-  <div class="container my-5">
-    <h1 class="text-center fs-3 text-vue">{{ title }}</h1>
-    <div class="row justify-content-center mt-4">
-      <div class="col-md-6 my-2">
-        <font-awesome-icon
-          class="position-absolute search-icon"
-          icon="search"
-        />
-        <input
-          class="form-control rounded-pill shadow border-2 search-input"
-          type="text"
-          placeholder="Ex: Asher"
-          autofocus
-          v-model="searchValue"
-        />
-        <div class="mt-1" v-show="searchValue">
-          <small> Search query: </small>
-          <span class="badge bg-light shadow rounded-pill text-dark">
-            {{ searchValue }}
-            <font-awesome-icon
-              class="search-clear fa-sm"
-              @click="clearSearch"
-              icon="times"
+  <div class="container-fluid main-container">
+    <div class="container my-5">
+      <h1 class="text-center fs-3 text-vue fw-bold">{{ title }}</h1>
+      <div class="row justify-content-center mt-4">
+        <div class="col-md-6 my-2">
+          <font-awesome-icon
+            class="position-absolute search-icon"
+            icon="search"
+          />
+          <input
+            class="form-control rounded-pill shadow border-2 search-input"
+            type="text"
+            placeholder="Ex: Asher"
+            autofocus
+            v-model="searchValue"
+          />
+          <div class="mt-1" v-show="searchValue">
+            <small> Search query: </small>
+            <span class="badge bg-light shadow rounded-pill text-dark">
+              {{ searchValue }}
+              <font-awesome-icon
+                class="search-clear fa-sm"
+                @click="clearSearch"
+                icon="times"
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3" v-if="searchValue">
+        <div
+          class="col-6 col-md-4 col-lg-3 my-2"
+          v-for="hotel in filteredHotels"
+          :key="hotel.id"
+        >
+          <div
+            class="card h-100 shadow rounded-4 animation border-2 search-card"
+          >
+            <img
+              height="120"
+              class="w-100 rounded-top-4 cover"
+              :src="`https://intranet.infoajara.com/storage/${hotel.image}`"
+              :alt="hotel.name_en"
+              v-if="hotel.image"
             />
-          </span>
+            <img
+              height="120"
+              class="w-100 rounded-top-4 cover"
+              :src="`https://ui-avatars.com/api/?uppercase=true&bold=true&background=random&size=512&name=${hotel.name_en}`"
+              :alt="hotel.name_en"
+              v-else
+            />
+            <div class="card-body">
+              <a
+                href="#!"
+                class="stretched-link text-decoration-none text-dark"
+              >
+                <h6 class="fw-bold">
+                  {{ hotel.name_en }}
+                </h6>
+              </a>
+              <small>
+                {{ hotel.category.name_en }} &bullet;
+                {{ hotel.municipality.name_en }}
+              </small>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row justify-content-center mt-3">
-      <div
-        class="col-6 col-md-4 col-lg-3 my-2"
-        v-for="hotel in filteredHotels"
-        :key="hotel.id"
-      >
-        <div class="card h-100 shadow rounded-4 animation border-2 search-card">
-          <img
-            height="120"
-            class="w-100 rounded-top-4 cover"
-            :src="`https://intranet.infoajara.com/storage/${hotel.image}`"
-            :alt="hotel.name_en"
-            v-if="hotel.image"
-          />
-          <img
-            height="120"
-            class="w-100 rounded-top-4 cover"
-            :src="`https://ui-avatars.com/api/?uppercase=true&bold=true&background=random&size=512&name=${hotel.name_en}`"
-            :alt="hotel.name_en"
-            v-else
-          />
-          <div class="card-body">
-            <a href="#!" class="stretched-link text-decoration-none text-dark">
-              <h6 class="fw-bold">
-                {{ hotel.name_en }}
-              </h6>
-            </a>
-            <small>
-              {{ hotel.category.name_en }} &bullet;
-              {{ hotel.municipality.name_en }}
-            </small>
+        <div
+          class="col-6 col-md-4 col-lg-3 my-2"
+          v-for="restaurant in filteredRestaurants"
+          :key="restaurant.id"
+        >
+          <div
+            class="card h-100 shadow rounded-4 animation border-2 search-card"
+          >
+            <img
+              height="120"
+              class="w-100 rounded-top-4 cover"
+              :src="`https://intranet.infoajara.com/storage/${restaurant.image}`"
+              :alt="restaurant.name_en"
+              v-if="restaurant.image"
+            />
+            <img
+              height="120"
+              class="w-100 rounded-top-4 cover"
+              :src="`https://ui-avatars.com/api/?uppercase=true&bold=true&background=random&size=512&name=${restaurant.name_en}`"
+              :alt="restaurant.name_en"
+              v-else
+            />
+            <div class="card-body">
+              <a
+                href="#!"
+                class="stretched-link text-decoration-none text-dark"
+              >
+                <h6 class="fw-bold">
+                  {{ restaurant.name_en }}
+                </h6>
+              </a>
+              <small>
+                {{ restaurant.category.name_en }} &bullet;
+                {{ restaurant.municipality.name_en }}
+              </small>
+            </div>
           </div>
         </div>
       </div>
-      <div
-        class="col-6 col-md-4 col-lg-3 my-2"
-        v-for="restaurant in filteredRestaurants"
-        :key="restaurant.id"
-      >
-        <div class="card h-100 shadow rounded-4 animation border-2 search-card">
+      <div class="row justify-content-center" v-else>
+        <div class="col-md-6 my-4">
           <img
-            height="120"
-            class="w-100 rounded-top-4 cover"
-            :src="`https://intranet.infoajara.com/storage/${restaurant.image}`"
-            :alt="restaurant.name_en"
-            v-if="restaurant.image"
+            class="animation-infinite h-100"
+            src="../assets/search-image.png"
+            alt="Type for results"
           />
-          <img
-            height="120"
-            class="w-100 rounded-top-4 cover"
-            :src="`https://ui-avatars.com/api/?uppercase=true&bold=true&background=random&size=512&name=${restaurant.name_en}`"
-            :alt="restaurant.name_en"
-            v-else
-          />
-          <div class="card-body">
-            <a href="#!" class="stretched-link text-decoration-none text-dark">
-              <h6 class="fw-bold">
-                {{ restaurant.name_en }}
-              </h6>
-            </a>
-            <small>
-              {{ restaurant.category.name_en }} &bullet;
-              {{ restaurant.municipality.name_en }}
-            </small>
-          </div>
         </div>
       </div>
     </div>
@@ -167,7 +188,40 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+::selection {
+  color: #fff;
+  background: #41b783;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #b8b8bd;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #41b783;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+a,
+span,
+div,
+small,
+p {
+  font-family: "Roboto", sans-serif;
+}
+
 .search-icon {
   margin-top: 0.8em;
   margin-left: 0.8em;
@@ -185,11 +239,11 @@ export default {
 }
 
 .search-input {
-  padding-left: 2em;
+  padding-left: 2em !important;
 }
 
 .search-input:focus {
-  border: 2px solid #41b783;
+  border: 2px solid #41b783 !important;
 }
 
 .search-card {
@@ -217,21 +271,45 @@ export default {
   top: 0px;
 }
 
+.animation-infinite {
+  position: relative;
+  animation: animation-infinite 1.5s ease-in-out infinite;
+}
+
 .cover {
   object-fit: cover;
 }
 
 .rounded-4 {
-  border-radius: 0.75em;
+  border-radius: 0.75em !important;
 }
 
 .rounded-top-4 {
-  border-top-left-radius: 0.75em;
-  border-top-right-radius: 0.75em;
+  border-top-left-radius: 0.75em !important;
+  border-top-right-radius: 0.75em !important;
 }
 
 .rounded-bottom-4 {
-  border-bottom-left-radius: 0.75em;
-  border-bottom-right-radius: 0.75em;
+  border-bottom-left-radius: 0.75em !important;
+  border-bottom-right-radius: 0.75em !important;
+}
+
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes animation-infinite {
+  0% {
+    top: 5px;
+  }
+  50% {
+    top: -5px;
+  }
+  100% {
+    top: 5px;
+  }
 }
 </style>
