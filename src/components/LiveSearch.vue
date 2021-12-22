@@ -11,7 +11,7 @@
           <input
             class="form-control rounded-pill shadow border-2 search-input"
             type="text"
-            placeholder="Ex: Asher"
+            :placeholder="placeholder"
             autofocus
             v-model="searchValue"
           />
@@ -31,7 +31,7 @@
       <div class="row justify-content-center mt-3" v-if="searchValue">
         <div
           class="col-6 col-md-4 col-lg-3 my-2"
-          v-for="hotel in filteredHotels"
+          v-for="hotel in hotels"
           :key="hotel.id"
         >
           <div
@@ -69,7 +69,7 @@
         </div>
         <div
           class="col-6 col-md-4 col-lg-3 my-2"
-          v-for="restaurant in filteredRestaurants"
+          v-for="restaurant in restaurants"
           :key="restaurant.id"
         >
           <div
@@ -125,65 +125,36 @@ export default {
   data() {
     return {
       title: "Vue Live Search",
-      hotels: {},
-      restaurants: {},
-      searchValue: "",
+      hotels: [],
+      restaurants: [],
+      placeholder: "Ex: Batumi",
+      searchValue: null,
     };
+  },
+  watch: {
+    searchValue() {
+      this.getResults();
+    },
   },
   methods: {
     clearSearch() {
       this.searchValue = "";
     },
-  },
-  computed: {
-    filteredHotels() {
-      let hotels = this.hotels;
-
-      if (this.searchValue != "") {
-        hotels = hotels.filter((hotel) => {
-          if (hotel.name_en != null) {
-            return hotel.name_en
-              .toUpperCase()
-              .includes(this.searchValue.toUpperCase());
-          }
-        });
+    getResults() {
+      if (this.searchValue.length >= 3) {
+        fetch(
+          "https://intranet.infoajara.com/api/search?name=" + this.searchValue
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            this.hotels = data.hotels;
+            this.restaurants = data.restaurants;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
-
-      return hotels;
     },
-    filteredRestaurants() {
-      let restaurants = this.restaurants;
-
-      if (this.searchValue != "") {
-        restaurants = restaurants.filter((restaurant) => {
-          if (restaurant.name_en != null) {
-            return restaurant.name_en
-              .toUpperCase()
-              .includes(this.searchValue.toUpperCase());
-          }
-        });
-      }
-
-      return restaurants;
-    },
-  },
-  mounted() {
-    fetch("https://intranet.infoajara.com/api/hotels")
-      .then((response) => response.json())
-      .then((data) => {
-        this.hotels = data.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    fetch("https://intranet.infoajara.com/api/restaurants")
-      .then((response) => response.json())
-      .then((data) => {
-        this.restaurants = data.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   },
 };
 </script>
